@@ -1,0 +1,96 @@
+activity.java
+##################
+
+package com.example.sjcet.optionmenu;
+
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.widget.Toast;
+
+public class MainActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()){
+            case R.id.open:
+                Toast.makeText(this, "Open Clicked", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.share:
+                Toast.makeText(this, "Share Clicked", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.delete:
+                Toast.makeText(this, "Delete Clicked", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.search:
+                Toast.makeText(this, "Search Clicked", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.settings:
+                Toast.makeText(this, "Settings Clicked", Toast.LENGTH_SHORT).show();
+                break;
+        }
+        return true;
+
+    }
+}
+
+Xml cod
+##########
+
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hello World!"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</android.support.constraint.ConstraintLayout>
+
+main_menu.xml
+###############
+
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<item
+    android:id="@+id/open"
+    android:title="Open"/>
+    <item
+        android:id="@+id/share"
+        android:title="Share"/>
+    <item
+        android:id="@+id/delete"
+        android:title="Delete"/>
+    <item
+        android:id="@+id/search"
+        android:title="Search"/>
+    <item
+        android:id="@+id/settings"
+        android:title="Settings"/>
+</menu>
