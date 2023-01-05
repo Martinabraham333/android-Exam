@@ -1,0 +1,161 @@
+mainactivity.java
+
+package com.example.sjcet.deleteoperation_sql;
+
+import android.database.Cursor;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+
+public class MainActivity extends AppCompatActivity {
+    EditText name;
+    EditText email;
+    Button insert,delete,view;
+    TextView tv;
+    database DB=new database(this);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        name=findViewById(R.id.name);
+        email=findViewById(R.id.email);
+        tv=findViewById(R.id.tv);
+        insert=findViewById(R.id.insert);
+        delete=findViewById(R.id.delete);
+        view=findViewById(R.id.view);
+
+
+
+        insert.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String Name=name.getText().toString();
+                String Email=email.getText().toString();
+
+                boolean checkinsert= DB.insertdata(Name,Email);
+                if(checkinsert==true){
+                    //Toast.makeText(MainActivity.this, "Data Inserted", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    //Toast.makeText(MainActivity.this, "Data Not Inserted", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String Name=name.getText().toString();
+                String Email=email.getText().toString();
+
+                boolean checkdelete= DB.deletedata(Name);
+                if(checkdelete==true){
+                    Toast.makeText(MainActivity.this, "Data Deleted", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    Toast.makeText(MainActivity.this, "Data Not Deleted", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+               Cursor res=DB.getdata();
+
+               if(res.getCount()==0){
+                   Toast.makeText(MainActivity.this, "No Data", Toast.LENGTH_SHORT).show();
+               }
+
+               StringBuffer buffer=new StringBuffer();
+               while(res.moveToNext()){
+                   buffer.append("Name : "+res.getString(0)+"\n");
+                   buffer.append("Email : "+res.getString(1)+"\n");
+               }
+               tv.setText(buffer.toString());
+            }
+        });
+    }
+
+}
+
+
+database.java
+
+package com.example.sjcet.deleteoperation_sql;
+
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+
+public class database extends SQLiteOpenHelper {
+    public database(Context context) {
+        super(context, "userdata.db", null, 1);
+    }
+
+    @Override
+    public void onCreate(SQLiteDatabase DB) {
+       DB.execSQL("create table Userdetails(name TEXT primary key,email TEXT )");
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase DB, int oldVersion, int newVersion) {
+      DB.execSQL("drop table if exists Userdetails");
+    }
+
+    public boolean insertdata(String name,String email){
+       SQLiteDatabase DB=this.getWritableDatabase();
+        ContentValues contentValues=new ContentValues();
+        contentValues.put("name",name);
+        contentValues.put("email",email);
+        long result=DB.insert("Userdetails",null,contentValues);
+        if(result==-1){
+            return false;
+        }
+        else {
+            return  true;
+        }
+    }
+
+
+
+
+    public boolean deletedata(String name) {
+        SQLiteDatabase DB = this.getWritableDatabase();
+
+        Cursor cursor = DB.rawQuery("select * from Userdetails where name=?", new String[]{name});
+        if (cursor.getCount() > 0) {
+            long result = DB.delete("Userdetails",  "name=?", new String[]{name});
+            if (result == -1) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+
+        else{
+            return false;
+        }
+
+    }
+
+    //public boolean deletedata(String name) {
+     public  Cursor getdata(){
+        SQLiteDatabase DB = this.getWritableDatabase();
+
+        Cursor cursor = DB.rawQuery("select * from Userdetails ",null);
+
+        return  cursor;
+
+    }
+}
+
